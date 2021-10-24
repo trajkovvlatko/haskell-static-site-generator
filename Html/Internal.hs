@@ -32,6 +32,9 @@ escape :: String -> String
 escape =
   concatMap escapeString
 
+append_ :: Structure -> Structure -> Structure
+append_ x y = Structure (getStructureString x <> getStructureString y)
+
 -- EDSL
 
 html_ :: Title -> Structure -> Html
@@ -49,8 +52,17 @@ p_ = Structure . el "p" . escape
 h1_ :: String -> Structure
 h1_ = Structure . el "h1" . escape
 
-append_ :: Structure -> Structure -> Structure
-append_ x y = Structure (getStructureString x <> getStructureString y)
+code_ :: String -> Structure
+code_ = Structure . el "pre" . escape
+
+li_ :: Structure -> String
+li_ = el "li" . getStructureString
+
+ul_ :: [Structure] -> Structure
+ul_ list = Structure . el "ul" $ concatMap li_ list
+
+ol_ :: [Structure] -> Structure
+ol_ list = Structure . el "ol" $ concatMap li_ list
 
 -- Rendering
 

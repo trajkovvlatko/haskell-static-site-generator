@@ -6,7 +6,7 @@ main = putStrLn (render myhtml)
 myhtml :: Html
 myhtml =
   html_
-    "My title"
+    ">> My title <<"
     (append_
       (h1_ "Header")
       (append_

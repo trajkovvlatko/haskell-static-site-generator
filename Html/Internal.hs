@@ -6,6 +6,9 @@ newtype Html = Html String
 
 newtype Structure = Structure String
 
+instance Semigroup Structure where
+  (<>) x y = Structure (getStructureString x <> getStructureString y)
+
 type Title = String
 
 -- Utilities
@@ -31,9 +34,6 @@ escapeString c =
 escape :: String -> String
 escape =
   concatMap escapeString
-
-append_ :: Structure -> Structure -> Structure
-append_ x y = Structure (getStructureString x <> getStructureString y)
 
 -- EDSL
 

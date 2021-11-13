@@ -7,12 +7,11 @@ myhtml :: Html
 myhtml =
   html_
     ">> My title <<"
-    (append_
-      (h1_ "Header")
-      (ul_
+    (h1_ "Header"
+      <>
+      ul_
         [ p_ "item 1"
         , p_ "item 2"
         , p_ "item 3"
         ]
-      )
     )

@@ -1,4 +1,6 @@
-module Html.Internal where
+module HsBlog.Html.Internal where
+
+import Numeric.Natural
 
 -- Types
 
@@ -8,6 +10,9 @@ newtype Structure = Structure String
 
 instance Semigroup Structure where
   (<>) x y = Structure (getStructureString x <> getStructureString y)
+
+instance Monoid Structure where
+  mempty = empty_
 
 type Title = String
 
@@ -52,6 +57,9 @@ p_ = Structure . el "p" . escape
 h1_ :: String -> Structure
 h1_ = Structure . el "h1" . escape
 
+h_ :: Natural -> String -> Structure
+h_ level = Structure . el ("h" ++ show level) . escape
+
 code_ :: String -> Structure
 code_ = Structure . el "pre" . escape
 
@@ -64,7 +72,16 @@ ul_ list = Structure . el "ul" $ concatMap li_ list
 ol_ :: [Structure] -> Structure
 ol_ list = Structure . el "ol" $ concatMap li_ list
 
+empty_ :: Structure
+empty_ = Structure ""
+
 -- Rendering
+
+concatStructure :: [Structure] -> Structure
+concatStructure list =
+  case list of
+    [] -> empty_
+    x : xs -> x <> concatStructure list
 
 render :: Html -> String
 render html =

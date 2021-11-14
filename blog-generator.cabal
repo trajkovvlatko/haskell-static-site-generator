@@ -1,0 +1,37 @@
+cabal-version:       2.4
+
+name:                blog-generator
+version:             0.0.0
+synopsis:            Blog generator
+description:         Blog generator
+license:             BSD-3-Clause
+author:              Vlatko Trajkov
+maintainer:          trajkovvlatko@gmail.com
+
+common common-settings
+  default-language: Haskell2010
+  ghc-options:
+    -Wall
+
+library
+  import: common-settings
+  hs-source-dirs: src
+  build-depends:
+      base
+    , directory
+  exposed-modules:
+    HsBlog
+      HsBlog.Convert
+      HsBlog.Html
+        HsBlog.Html.Internal
+      HsBlog.Markup
+
+executable blog-generator-gen
+  import: common-settings
+  hs-source-dirs: app
+  main-is: Main.hs
+  build-depends:
+      base
+    , blog-generator
+  ghc-options:
+    -O

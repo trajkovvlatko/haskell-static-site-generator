@@ -52,13 +52,13 @@ html_ title content =
   in Html html
 
 p_ :: Content -> Structure
-p_ = Structure . el "p" . escape . getContentString
+p_ = Structure . el "p" . getContentString
 
 h1_ :: Content -> Structure
-h1_ = Structure . el "h1" . escape . getContentString
+h1_ = Structure . el "h1" . getContentString
 
 h_ :: Natural -> Content -> Structure
-h_ level = Structure . el ("h" ++ show level) . escape . getContentString
+h_ level = Structure . el ("h" ++ show level) . getContentString
 
 code_ :: String -> Structure
 code_ = Structure . el "pre" . escape

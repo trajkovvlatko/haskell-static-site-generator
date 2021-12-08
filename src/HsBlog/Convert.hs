@@ -4,8 +4,8 @@ import qualified HsBlog.Html as Html
 import qualified HsBlog.Markup as Markup
 
 convert :: Html.Title -> [Markup.Structure] -> Html.Html
-convert title doc =
-  let htmlStructure = foldMap convertStructure doc
+convert title markdownStructure =
+  let htmlStructure = foldMap convertStructure markdownStructure
     in Html.html_ title htmlStructure
 
 -- convert' :: Html.Title -> [Markup.Structure] -> Html.Html
@@ -14,8 +14,8 @@ convert title doc =
 convertStructure :: Markup.Structure -> Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header level txt -> Html.h_ level (Html.txt_ txt)
-    Markup.Paragraph txt -> Html.p_ (Html.txt_ txt)
+    Markup.Header level txt -> Html.h_ level $ Html.txt_ txt
+    Markup.Paragraph txt -> Html.p_ $ Html.txt_ txt
     Markup.CodeBlock list -> Html.code_ $ unlines list
     Markup.OrderedList list -> Html.ol_ $ map (Html.p_ . Html.txt_) list
     Markup.UnorderedList list -> Html.ul_ $ map (Html.p_ . Html.txt_) list
@@ -29,15 +29,18 @@ process title markup =
       html = convert title parsedMarkup
     in Html.render html
 
+indexItem :: FilePath -> String -> [Markup.Structure] -> Html.Structure
+indexItem file header article =
+  Html.h_ 3 (Html.link_ file (Html.txt_ header))
+    <> foldMap convertStructure (take 3 article)
+    <> Html.p_ (Html.link_ file (Html.txt_ "..."))
+
 buildIndex :: [(FilePath, Markup.Document)] -> Html.Html
 buildIndex files =
   let
     previews = map (\ (file, doc) ->
       case doc of
-        Markup.Header 1 header : article ->
-          Html.h_ 3 (Html.link_ file (Html.txt_ header))
-            <> foldMap convertStructure (take 3 article)
-            <> Html.p_ (Html.link_ file (Html.txt_ "..."))
+        Markup.Header 1 header : article -> indexItem file header article
         _ ->
           Html.h_ 3 (Html.link_ file (Html.txt_ file))
       )

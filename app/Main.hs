@@ -1,3 +1,5 @@
+{-# LANGUAGE LambdaCase #-}
+
 module Main where
 
 import qualified HsBlog
@@ -48,9 +50,8 @@ main = do
 confirm :: IO Bool
 confirm =
   putStrLn "Are you sure? (y/n)" *>
-    getLine >>= \answer ->
-      case answer of
-        "y" -> pure True
-        "n" -> pure False
-        _ -> putStrLn "Invalid response. use y or n" *>
-          confirm
+    getLine >>= \case
+      "y" -> pure True
+      "n" -> pure False
+      _ -> putStrLn "Invalid response. use y or n" *>
+        confirm
